@@ -44,7 +44,7 @@ def create_viz(df):
     fig.update_yaxes(visible=False)
     fig.update_layout(hovermode="x unified")
     ## Add vertical line at origin paper
-    origin_date = df[df['paper_key'] == 'origin paper']['coverDate'][0]
+    #origin_date = df[df['paper_key'] == 'origin paper']['coverDate'][0]
     #fig.add_vline(x=origin_date, line_dash='dash')
 
     return fig
