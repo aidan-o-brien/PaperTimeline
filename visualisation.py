@@ -34,7 +34,8 @@ def create_viz(df):
                      hover_data={'paper_key': False,
                                  'place_holder': False,
                                  'coverDate': False,
-                                 'title': True})
+                                 'title': True,
+                                 'eid': True})
 
     # Add range slider
     fig.update_layout(xaxis=dict(rangeslider=dict(visible=True), type='date'))
