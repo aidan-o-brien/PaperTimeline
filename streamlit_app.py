@@ -5,6 +5,7 @@ import plotly
 
 from gather_data import *
 from visualisation import *
+from utils import update_bool
 
 
 # -- Basic page display
@@ -24,20 +25,19 @@ st.markdown("""
 # -- Obtain DOI from user
 doi = st.text_input("Please enter a DOI:", "")
 
-# -- Obtain search filter from user
-search_query = st.text_input("Please enter a search term to filter papers:", "").lower()
-
-# -- Collect and process data
 if doi != "":
+    # -- Obtain search filter from user
+    search_query = st.text_input("Please enter a search term to filter papers:", "").lower()
+
+    # -- Collect and process data
     df = create_df(doi)
     df = preprocess(df)
 
-if search_query == "":
-    bool = np.ones(df.shape[0], dtype=bool)
-else:
-    bool = df['title'].str.contains(search_query, case=False, regex=False)
+    if search_query == "":
+        bool = np.ones(df.shape[0], dtype=bool)
+    else:
+        bool = update_bool(df, search_query)
 
-
-# -- Generate visualisation
-fig = create_viz(df[bool])
-st.plotly_chart(fig)
+    # -- Generate visualisation
+    fig = create_viz(df[bool])
+    st.plotly_chart(fig)
