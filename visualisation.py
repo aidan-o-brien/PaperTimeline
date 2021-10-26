@@ -32,7 +32,7 @@ def preprocess(df):
     return df
 
 
-def create_viz(df):
+def create_viz(df, origin_date):
     # Plot figure
     fig = px.scatter(df, x='month_year', y='place_holder', color='paper_key',
                      hover_data={'paper_key': False,
@@ -44,12 +44,10 @@ def create_viz(df):
     fig.update_layout(xaxis=dict(rangeslider=dict(visible=True), type='date'))
 
     # Formatting
-    origin_row = df[df['paper_key'] == 'origin paper']
     fig.update_layout(height=400, title_text='Research Timeline')
     fig.update_yaxes(visible=False)
     fig.update_layout(hovermode="closest")
     ## Add vertical line at origin paper (month but not day)
-    origin_date = origin_row['coverDate'][0]
     fig.add_vline(x=origin_date.to_period('M').to_timestamp(), line_dash='dash')
 
     return fig

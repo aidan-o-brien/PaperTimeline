@@ -31,6 +31,7 @@ if doi != "":
     df = preprocess(df)
     st.write('Data collected and processed.')
 
+
     # -- Obtain search filter from user
     search_query = st.text_input("Please enter a search term to filter papers:", "").lower() # use callback?
 
@@ -39,25 +40,19 @@ if doi != "":
     else:
         bool = create_search_filter(df, search_query)
 
+
     # -- Author dropdown filter
     ## List of author names to select from
     authors_list = df[bool]['author_names'].tolist()
-    df.to_csv('data.csv')
-    for author_list in authors_list:
-        if len(author_list) == 0:
-            print('It is empty')
-    #print(authors_list)
-
     authors_set = list(set([x for l in authors_list for x in l]))
     authors_filter = st.multiselect('Select authors to filter by:',
                                     authors_set)  # list
-    #print(authors_filter)
-
     ## Update boolean for filtering
     if len(authors_filter) != 0:
         bool = create_author_filter(df, authors_filter)
 
 
     # -- Generate visualisation
-    fig = create_viz(df[bool])
+    origin_date = df[df['paper_key'] == 'origin paper']['month_year'][0]
+    fig = create_viz(df[bool], origin_date)
     st.plotly_chart(fig)
