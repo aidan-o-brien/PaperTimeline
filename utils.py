@@ -18,7 +18,6 @@ def create_search_filter(df, query):
 
 def create_author_filter(df, authors_filter):
     temp_df = df.explode('author_names')
-    #temp_df['month_year'] = df['month_year'].astype('object')
 
     # for each author, filter df for just their papers
     indices = []
@@ -31,9 +30,6 @@ def create_author_filter(df, authors_filter):
     index_array = np.zeros(df.shape[0], dtype=bool)
     for idx in indices:
         index_array[idx] = 1
-
-    print(index_array)
-    print(index_array[0])
 
     return index_array
 
