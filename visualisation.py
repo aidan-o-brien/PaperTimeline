@@ -20,22 +20,23 @@ def preprocess(df):
     # Loop through papers in df
     for row in df.itertuples():
         # Set the value for place_holder
-        datetime = row.month_year
-        df.iat[row.Index, -2] = datetime_dict[datetime]
+        df.at[row.Index, 'place_holder'] = datetime_dict[row.month_year]
         # Add one to the value
-        datetime_dict[datetime] += 1
+        datetime_dict[row.month_year] += 0.5
+
+    # Set date to start of month for neatness on visualisation
+    df['month_year'] = df['month_year'].dt.to_timestamp()
 
     return df
 
 
 def create_viz(df):
     # Plot figure
-    fig = px.scatter(df, x='coverDate', y='place_holder', color='paper_key',
+    fig = px.scatter(df, x='month_year', y='place_holder', color='paper_key',
                      hover_data={'paper_key': False,
                                  'place_holder': False,
-                                 'coverDate': False,
-                                 'title': True,
-                                 'eid': True})
+                                 'coverDate': True,
+                                 'title': False})
 
     # Add range slider
     fig.update_layout(xaxis=dict(rangeslider=dict(visible=True), type='date'))
@@ -43,7 +44,7 @@ def create_viz(df):
     # Formatting
     fig.update_layout(height=400, title_text='Research Timeline')
     fig.update_yaxes(visible=False)
-    fig.update_layout(hovermode="x unified")
+    fig.update_layout(hovermode="closest")
     ## Add vertical line at origin paper
     #origin_date = df[df['paper_key'] == 'origin paper']['coverDate'][0]
     #fig.add_vline(x=origin_date, line_dash='dash')
