@@ -9,8 +9,7 @@ from utils import *
 
 
 # -- Basic page display
-apptitle = 'Research Timeline'
-st.set_page_config(page_title=apptitle, page_icon="emojione:blue-book")
+st.set_page_config(page_title='Research Timeline', page_icon="emojione:blue-book")
 
 st.title('Research Timeline Visualisation')
 
@@ -31,7 +30,6 @@ if doi != "":
     st.write('Collecting and processing data...')
     df = create_df(doi)
     df = preprocess(df)
-    #df.to_csv('data.csv')
     st.write('Data collected and processed.')
 
     # -- Obtain search filter from user

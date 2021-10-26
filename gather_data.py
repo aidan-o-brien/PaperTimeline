@@ -1,5 +1,7 @@
 import pandas as pd
 from pybliometrics.scopus import ScopusSearch
+from stqdm import stqdm
+import streamlit as st
 
 
 def get_initial_paper(doi):
@@ -21,6 +23,7 @@ def get_initial_paper(doi):
 def get_papers_by_authors(author_ids):
 
     # Search for papers by authors of query paper
+    st.write('Fetching papers by authors...')
     for i, author_id in enumerate(author_ids):
         author_query = f"AU-ID ({author_id})"
         author_s = ScopusSearch(author_query)
