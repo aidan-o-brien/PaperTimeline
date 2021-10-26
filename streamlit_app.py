@@ -6,6 +6,7 @@ import plotly
 from gather_data import *
 from visualisation import *
 from utils import *
+import base64
 
 
 # -- Basic page display
@@ -59,9 +60,13 @@ if doi != "":
     else:
         my_bool = np.ones(df.shape[0], dtype=bool)
         x = 'else'
-        
+
 
     # -- Generate visualisation
     origin_date = df[df['paper_key'] == 'origin paper']['month_year'][0]
     fig = create_viz(df[my_bool], origin_date)
     st.plotly_chart(fig)
+
+
+    # -- Option to download the fitlered dataframe
+    st.markdown(get_table_download_link(df[my_bool]), unsafe_allow_html=True)

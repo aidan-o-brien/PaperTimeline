@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import base64
 
 
 def create_search_filter(df, query):
@@ -35,3 +36,10 @@ def create_author_filter(df, authors_filter):
     print(index_array[0])
 
     return index_array
+
+
+def get_table_download_link(df):
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    href = f'<a href="data:file/csv;base64,{b64}" download="research_timeline.csv">Download csv file</a>'
+    return href
