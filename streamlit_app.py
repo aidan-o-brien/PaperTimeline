@@ -27,7 +27,6 @@ doi = st.text_input("Please enter a DOI:", "")
 if doi != "":
 
     # -- Collect and process data
-    st.write('Collecting and processing data...')
     df = create_df(doi)
     df = preprocess(df)
     st.write('Data collected and processed.')
@@ -43,6 +42,12 @@ if doi != "":
     # -- Author dropdown filter
     ## List of author names to select from
     authors_list = df[bool]['author_names'].tolist()
+    df.to_csv('data.csv')
+    for author_list in authors_list:
+        if len(author_list) == 0:
+            print('It is empty')
+    #print(authors_list)
+
     authors_set = list(set([x for l in authors_list for x in l]))
     authors_filter = st.multiselect('Select authors to filter by:',
                                     authors_set)  # list

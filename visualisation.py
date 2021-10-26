@@ -5,9 +5,11 @@ import plotly.graph_objects as go
 
 def preprocess(df):
 
-    # Add place holder for y axis and reset index
+    # Add place holder for y axis, reset index and remove blanks for authors
     df['place_holder'] = 0
     df.reset_index(drop=True, inplace=True)
+    df.replace('', float('NaN'), inplace=True)
+    df.dropna(subset=['author_names'], inplace=True)
 
     # If there has been a paper in this month (and year), add 1 to placeholder
     # Create date column for just month and year
@@ -19,12 +21,10 @@ def preprocess(df):
 
     # Loop through papers in df
     for row in df.itertuples():
-        #print('index:', row.Index)
-        #print('Row 94 placeholder value:', df.at[94, 'place_holder'])
         # Set the value for place_holder
         df.at[row.Index, 'place_holder'] = datetime_dict[row.month_year]
         # Add one to the value
-        datetime_dict[row.month_year] += 0.5
+        datetime_dict[row.month_year] += 1
 
     # Set date to start of month for neatness on visualisation
     df['month_year'] = df['month_year'].dt.to_timestamp()

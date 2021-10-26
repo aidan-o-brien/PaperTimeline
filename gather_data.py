@@ -24,6 +24,11 @@ def get_papers_by_authors(author_ids):
 
     # Search for papers by authors of query paper
     st.write('Fetching papers by authors...')
+
+    # Add a progress bar to help user know how long data collection takes
+    my_bar = st.progress(0)
+    num_authors = len(author_ids)
+
     for i, author_id in enumerate(author_ids):
         author_query = f"AU-ID ({author_id})"
         author_s = ScopusSearch(author_query)
@@ -32,6 +37,9 @@ def get_papers_by_authors(author_ids):
             df = pd.DataFrame(author_s.results)
         else:
             df = pd.concat([df, pd.DataFrame(author_s.results)])
+
+        perc_complete = (i + 1) / num_authors
+        my_bar.progress(perc_complete)
 
     # Split author data
     df.author_names = df.author_names.str.split(';')
@@ -43,6 +51,8 @@ def get_papers_by_authors(author_ids):
 
 
 def get_citing_papers(eid):
+
+    st.write('Fetching citing papers...')
     cited_query = f"REF ({eid})"
     cited_s = ScopusSearch(cited_query)
     df = pd.DataFrame(cited_s.results)
