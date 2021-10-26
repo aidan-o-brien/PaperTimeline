@@ -35,24 +35,33 @@ if doi != "":
     # -- Obtain search filter from user
     search_query = st.text_input("Please enter a search term to filter papers:", "").lower() # use callback?
 
-    if search_query == "":
-        bool = np.ones(df.shape[0], dtype=bool)
-    else:
-        bool = create_search_filter(df, search_query)
-
 
     # -- Author dropdown filter
     ## List of author names to select from
-    authors_list = df[bool]['author_names'].tolist()
+    authors_list = df['author_names'].tolist()
     authors_set = list(set([x for l in authors_list for x in l]))
     authors_filter = st.multiselect('Select authors to filter by:',
                                     authors_set)  # list
-    ## Update boolean for filtering
-    if len(authors_filter) != 0:
-        bool = create_author_filter(df, authors_filter)
 
+    x = 'start'
+    # -- Create a boolean array for filtering df
+    if search_query != "" and len(authors_filter) != 0:
+        filter_bool = create_author_filter(df, authors_filter)
+        search_bool = create_search_filter(df, search_query)
+        my_bool = np.logical_and(filter_bool, search_bool)
+        x = 'if'
+    elif search_query != "":
+        my_bool = create_search_filter(df, search_query)
+        x = 'elif1'
+    elif len(authors_filter) != 0:
+        my_bool = create_author_filter(df, authors_filter)
+        x = 'elif2'
+    else:
+        my_bool = np.ones(df.shape[0], dtype=bool)
+        x = 'else'
+        
 
     # -- Generate visualisation
     origin_date = df[df['paper_key'] == 'origin paper']['month_year'][0]
-    fig = create_viz(df[bool], origin_date)
+    fig = create_viz(df[my_bool], origin_date)
     st.plotly_chart(fig)
