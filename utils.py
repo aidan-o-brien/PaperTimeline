@@ -37,5 +37,5 @@ def create_author_filter(df, authors_filter):
 def get_table_download_link(df):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
-    href = f'<a href="data:file/csv;base64,{b64}" download="research_timeline.csv">Download csv file</a>'
+    href = f'<a href="data:file/csv;base64,{b64}" download="research_timeline.csv">Download data</a>'
     return href

@@ -44,29 +44,29 @@ if doi != "":
     authors_filter = st.multiselect('Select authors to filter by:',
                                     authors_set)  # list
 
-    x = 'start'
+
     # -- Create a boolean array for filtering df
     if search_query != "" and len(authors_filter) != 0:
         filter_bool = create_author_filter(df, authors_filter)
         search_bool = create_search_filter(df, search_query)
         my_bool = np.logical_and(filter_bool, search_bool)
-        x = 'if'
     elif search_query != "":
         my_bool = create_search_filter(df, search_query)
-        x = 'elif1'
     elif len(authors_filter) != 0:
         my_bool = create_author_filter(df, authors_filter)
-        x = 'elif2'
     else:
         my_bool = np.ones(df.shape[0], dtype=bool)
-        x = 'else'
 
 
     # -- Generate visualisation
     origin_date = df[df['paper_key'] == 'origin paper']['month_year'][0]
-    fig = create_viz(df[my_bool], origin_date)
-    st.plotly_chart(fig)
+    #fig = create_viz(df[my_bool], origin_date)
+    #st.plotly_chart(fig)
 
+
+    # -- Generate citation Visualisation
+    fig_2 = create_cites_viz(df[my_bool], origin_date)
+    st.plotly_chart(fig_2)
 
     # -- Option to download the fitlered dataframe
     st.markdown(get_table_download_link(df[my_bool]), unsafe_allow_html=True)

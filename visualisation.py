@@ -41,14 +41,33 @@ def create_viz(df, origin_date):
                                  'coverDate': False,
                                  'title': True})
 
-    # Add range slider
-    fig.update_layout(xaxis=dict(rangeslider=dict(visible=True), type='date'))
-
     # Formatting
+    fig.update_layout(xaxis=dict(rangeslider=dict(visible=True), type='date'))
     fig.update_layout(height=400, title_text='Research Timeline')
     fig.update_yaxes(visible=False)
     fig.update_layout(hovermode="closest")
     ## Add vertical line at origin paper (month but not day)
+    fig.add_vline(x=origin_date.to_period('M').to_timestamp(), line_dash='dash')
+
+    return fig
+
+
+def create_cites_viz(df, origin_date):
+
+    df['citedby_count'] = df['citedby_count'].astype(int)
+    fig = px.scatter(df, x='month_year', y='place_holder',
+                     color='citedby_count',
+                     hover_data={'place_holder': False,
+                                 'title': True},
+                     symbol='paper_key')
+
+    # Formatting
+    fig.update_layout(height=400, title='Research Timeline',
+                      hovermode='closest',
+                      legend=dict(orientation="h", yanchor="bottom",
+                                  y=1, xanchor="right", x=1))
+    fig.update_layout(xaxis=dict(rangeslider=dict(visible=True), type='date'))
+    fig.update_yaxes(visible=False)
     fig.add_vline(x=origin_date.to_period('M').to_timestamp(), line_dash='dash')
 
     return fig
