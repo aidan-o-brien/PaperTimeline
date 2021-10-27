@@ -33,16 +33,18 @@ if doi != "":
     st.write('Data collected and processed.')
 
 
-    # -- Obtain search filter from user
-    search_query = st.text_input("Please enter a search term to filter papers:", "").lower() # use callback?
+    # -- Create expander for search and author filter
+    with st.expander('Search and Filter'):
+        # -- Obtain search filter from user
+        search_query = st.text_input("Search title and abstract:", "").lower() # use callback?
 
 
-    # -- Author dropdown filter
-    ## List of author names to select from
-    authors_list = df['author_names'].tolist()
-    authors_set = list(set([x for l in authors_list for x in l]))
-    authors_filter = st.multiselect('Select authors to filter by:',
-                                    authors_set)  # list
+        # -- Author dropdown filter
+        ## List of author names to select from
+        authors_list = df['author_names'].tolist()
+        authors_set = list(set([x for l in authors_list for x in l]))
+        authors_filter = st.multiselect('Select authors:',
+                                        authors_set)  # list
 
 
     # -- Create a boolean array for filtering df
@@ -60,13 +62,8 @@ if doi != "":
 
     # -- Generate visualisation
     origin_date = df[df['paper_key'] == 'origin paper']['month_year'][0]
-    #fig = create_viz(df[my_bool], origin_date)
-    #st.plotly_chart(fig)
-
-
-    # -- Generate citation Visualisation
-    fig_2 = create_cites_viz(df[my_bool], origin_date)
-    st.plotly_chart(fig_2)
+    fig = create_cites_viz(df[my_bool], origin_date)
+    st.plotly_chart(fig)
 
 
     # -- Option to download the fitlered dataframe
@@ -74,8 +71,8 @@ if doi != "":
 
 
     # -- Option to view some summary statistics
-    sum_stats = st.checkbox('Show summary statistics')
-    placeholder = st.empty()
-    if sum_stats:
-        sum_stats_text = produce_sum_stats()
-        placeholder.markdown(sum_stats_text)
+    with st.expander('Show Summary Statistics'):
+        st.markdown("""
+        + Summary statistic 1
+        + Summary statistic 2
+        """)
