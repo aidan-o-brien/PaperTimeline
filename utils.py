@@ -39,3 +39,8 @@ def get_table_download_link(df):
     b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
     href = f'<a href="data:file/csv;base64,{b64}" download="research_timeline.csv">Download data</a>'
     return href
+
+
+def produce_sum_stats():
+
+    return markdown

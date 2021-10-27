@@ -2,6 +2,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+import matplotlib
+from matplotlib import cm
+import numpy as np
 
 
 def preprocess(df):
@@ -54,11 +57,15 @@ def create_viz(df, origin_date):
 
 def create_cites_viz(df, origin_date):
 
-    df['citedby_count'] = df['citedby_count'].astype(int)
+    df['Citations'] = df['citedby_count'].astype(int)
+
     fig = px.scatter(df, x='month_year', y='place_holder',
-                     color='citedby_count',
+                     color='Citations',
+                     range_color=[0, 150],
                      hover_data={'place_holder': False,
-                                 'title': True},
+                                 'title': True,
+                                 'paper_key': False,
+                                 'month_year': False},
                      symbol='paper_key')
 
     # Formatting

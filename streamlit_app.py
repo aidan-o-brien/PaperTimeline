@@ -68,5 +68,14 @@ if doi != "":
     fig_2 = create_cites_viz(df[my_bool], origin_date)
     st.plotly_chart(fig_2)
 
+
     # -- Option to download the fitlered dataframe
     st.markdown(get_table_download_link(df[my_bool]), unsafe_allow_html=True)
+
+
+    # -- Option to view some summary statistics
+    sum_stats = st.checkbox('Show summary statistics')
+    placeholder = st.empty()
+    if sum_stats:
+        sum_stats_text = produce_sum_stats()
+        placeholder.markdown(sum_stats_text)
