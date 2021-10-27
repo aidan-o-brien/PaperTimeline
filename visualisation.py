@@ -2,9 +2,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
-import matplotlib
-from matplotlib import cm
 import numpy as np
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 
 
 def preprocess(df):
@@ -76,5 +76,20 @@ def create_cites_viz(df, origin_date):
     fig.update_layout(xaxis=dict(rangeslider=dict(visible=True), type='date'))
     fig.update_yaxes(visible=False)
     fig.add_vline(x=origin_date.to_period('M').to_timestamp(), line_dash='dash')
+
+    return fig
+
+
+def create_wordcloud(df):
+
+    text = ''
+    for abstract in df.description:
+        if isinstance(abstract, str):
+            text += abstract
+    wordcloud = WordCloud(max_words=40,
+                          background_color='white').generate(text)
+    fig, ax = plt.subplots()
+    ax.imshow(wordcloud, interpolation='bilinear')
+    ax.axis('off')
 
     return fig

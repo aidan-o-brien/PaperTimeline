@@ -41,6 +41,39 @@ def get_table_download_link(df):
     return href
 
 
-def produce_sum_stats():
+def produce_sum_stats(df):
+    df.to_csv('data.csv')
+    origin_paper = df[df['paper_key'] == 'origin paper']
+    title = origin_paper['title'][0]
+    # authors
+    authors = origin_paper['author_names'][0]
+    authors_str = ''
+    for i, name in enumerate(authors):
+        if i == len(authors) - 1:
+            authors_str += name
+        else:
+            authors_str += f'{name}; '
+    num_papers_by_authors = df[df['paper_key'] == 'papers by authors'].shape[0]
+    num_papers_citing = df[df['paper_key'] == 'citing papers'].shape[0]
+    cites = df['citedby_count'].to_numpy(dtype=np.float)
+    mean_cites = cites.mean()
+    max_cites = cites.max()
+    temp_df = df.explode('author_names')
+    num_authors = len(temp_df.author_names.unique())
 
+    markdown = f"""
+    ### {title}
+    + Authors: {authors_str}
+    + Papers by authors: {num_papers_by_authors}
+    + Number of collaborations between authors: {find_num_collaborations(df)}
+    + Numer of citing papers: {num_papers_citing}
+    + Average citations: {mean_cites}
+    + Maximum citations: {max_cites}
+    + Number of total authors: {num_authors}
+    """
     return markdown
+
+
+def find_num_collaborations(df):
+    authors = df[df['paper_key'] == 'origin paper']['author_names'][0]
+    return num_collaborations

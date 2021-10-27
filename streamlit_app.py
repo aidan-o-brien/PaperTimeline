@@ -6,20 +6,12 @@ import plotly
 from gather_data import *
 from visualisation import *
 from utils import *
-import base64
 
 
 # -- Basic page display
 st.set_page_config(page_title='Research Timeline', page_icon="emojione:blue-book")
 
 st.title('Research Timeline Visualisation')
-
-st.markdown("""
-    * Use the search box below to enter a DOI
-    * Wait for a magical visualisation to appear
-    * Use additional search functionality to filter for papers by terms in the
-    title OR by authors - currently, cannot do both
-""")
 
 
 # -- Obtain DOI from user
@@ -28,9 +20,10 @@ doi = st.text_input("Please enter a DOI:", "")
 if doi != "":
 
     # -- Collect and process data
-    df = create_df(doi)
-    df = preprocess(df)
-    st.write('Data collected and processed.')
+    with st.expander('Show Data Preparation Progress'):
+        df = create_df(doi)
+        df = preprocess(df)
+        st.write('Data collected and processed.')
 
 
     # -- Create expander for search and author filter
@@ -71,8 +64,10 @@ if doi != "":
 
 
     # -- Option to view some summary statistics
-    with st.expander('Show Summary Statistics'):
-        st.markdown("""
-        + Summary statistic 1
-        + Summary statistic 2
-        """)
+    with st.expander('Show Brief Summary'):
+        st.markdown("""# Summary """)
+        stats_markdown = produce_sum_stats(df)
+        st.markdown(stats_markdown)
+        st.markdown("""# Word Cloud of Abstracts """)
+        wordcloud_fig = create_wordcloud(df)
+        st.pyplot(wordcloud_fig)
