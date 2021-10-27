@@ -65,9 +65,10 @@ if doi != "":
 
     # -- Option to view some summary statistics
     with st.expander('Show Brief Summary'):
-        st.markdown("""# Summary """)
+        origin_title = df[df['paper_key'] == 'origin paper']['title'][0]
+        st.markdown(f"""## {origin_title} """)
         stats_markdown = produce_sum_stats(df)
         st.markdown(stats_markdown)
-        st.markdown("""# Word Cloud of Abstracts """)
+        st.markdown("""### Word Cloud of Abstracts """)
         wordcloud_fig = create_wordcloud(df)
         st.pyplot(wordcloud_fig)

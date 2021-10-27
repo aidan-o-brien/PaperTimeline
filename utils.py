@@ -42,7 +42,6 @@ def get_table_download_link(df):
 
 
 def produce_sum_stats(df):
-    df.to_csv('data.csv')
     origin_paper = df[df['paper_key'] == 'origin paper']
     title = origin_paper['title'][0]
     # authors
@@ -62,7 +61,7 @@ def produce_sum_stats(df):
     num_authors = len(temp_df.author_names.unique())
 
     markdown = f"""
-    ### {title}
+    ### Summary
     + Authors: {authors_str}
     + Papers by authors: {num_papers_by_authors}
     + Number of collaborations between authors: {find_num_collaborations(df)}
@@ -76,4 +75,13 @@ def produce_sum_stats(df):
 
 def find_num_collaborations(df):
     authors = df[df['paper_key'] == 'origin paper']['author_names'][0]
-    return num_collaborations
+    collabs = np.zeros(df.shape[0])
+
+    for row in df.itertuples():
+        num_authors = 0
+        for author in authors:
+            if author in row.author_names:
+                num_authors += 1
+        if num_authors > 1:
+            collabs[row.Index] = 1
+    return int(collabs.sum())
