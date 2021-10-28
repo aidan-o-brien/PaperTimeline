@@ -11,6 +11,7 @@ from visualisation import preprocess, create_cites_viz, create_wordcloud
 from utils import (
     create_search_filter, create_author_filter, get_table_download_link, produce_sum_stats
 )
+from pybliometrics.scopus.exception import Scopus401Error
 
 
 # -- Basic page display
@@ -33,6 +34,17 @@ if doi:
         valid_doi = True
     except KeyError:
         st.error('DOI not found. Please try again.')
+    except Scopus401Error as err:
+        from pathlib import Path
+        config_location = str(Path.home()) + "\\"+ r'\.scopus\config.ini'
+        st.error(f'Invalid API key. Make sure you are connected to the VPN of \
+                   your institution. If you are, please consider updating your \
+                   API key. You will be able to do this by creating a new API key \
+                   on Scopus and updating it in the config file on your machine. \
+                   This might be found under [Authenticaion] at the following \
+                   location: {config_location}')
+    except:
+        st.error('There was an unexpected error.')
 
 
 # If valid DOI provided, execute rest of program
