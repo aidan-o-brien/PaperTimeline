@@ -12,7 +12,7 @@ def get_initial_paper(doi):
 
     # Search Scopus using ScopusSearch API
     query = f"DOI ({doi})"
-    res = ScopusSearch(query)
+    res = ScopusSearch(query)   # error here
     df = pd.DataFrame(res.results)
 
     # If doi is not valid
