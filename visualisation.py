@@ -61,6 +61,7 @@ def create_cites_viz(df, origin_date):
 
     fig = px.scatter(df, x='month_year', y='place_holder',
                      color='Citations',
+                     color_continuous_scale='Plasma_r',
                      range_color=[0, 150],
                      hover_data={'place_holder': False,
                                  'title': True,
