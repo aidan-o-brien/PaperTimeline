@@ -14,18 +14,24 @@ st.set_page_config(page_title='Research Timeline', page_icon="emojione:blue-book
 st.title('Research Timeline Visualisation')
 
 
-# -- Obtain DOI from user
+# -- Obtain DOI from user input
 doi = st.text_input("Please enter a DOI:", "")
 
-if doi != "":
-
-    # -- Collect and process data
-    with st.expander('Show Data Preparation Progress'):
+# If user has input text, trying running
+valid_doi = False
+if len(doi) != 0:
+    try:
+        # -- Collect and process data
         df = create_df(doi)
         df = preprocess(df)
         st.write('Data collected and processed.')
+        valid_doi = True
+    except:
+        st.error('DOI not found. Please try again.')
 
 
+# If valid DOI provided, execute rest of program
+if valid_doi:
     # -- Create expander for search and author filter
     with st.expander('Search and Filter'):
         # -- Obtain search filter from user
@@ -52,8 +58,8 @@ if doi != "":
     else:
         my_bool = np.ones(df.shape[0], dtype=bool)
 
+        # -- Generate visualisation
 
-    # -- Generate visualisation
     origin_date = df[df['paper_key'] == 'origin paper']['month_year'][0]
     fig = create_cites_viz(df[my_bool], origin_date)
     st.plotly_chart(fig)

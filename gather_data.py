@@ -11,6 +11,10 @@ def get_initial_paper(doi):
     s = ScopusSearch(query)
     df = pd.DataFrame(s.results)
 
+    # If doi is not valid
+    if df.shape[0] == 0:
+        return df
+
     # Split author data
     df.author_names = df.author_names.str.split(';')
     df.author_ids = df.author_ids.str.split(';')
@@ -70,6 +74,8 @@ def create_df(doi):
 
     # Find data on initial paper
     df = get_initial_paper(doi)
+    if df.shape[0] == 0:
+        return df
 
     # Find papers by authors of initial paper
     df1 = get_papers_by_authors(df.iloc[0]['author_ids'])
