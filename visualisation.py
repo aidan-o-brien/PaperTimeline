@@ -2,6 +2,7 @@
 
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
@@ -67,7 +68,7 @@ def create_cites_viz(df, origin_date):
     fig.update_layout(xaxis=dict(rangeslider=dict(visible=True), type='date'))
     fig.update_yaxes(visible=False)
     fig.add_vline(x=origin_date.to_period('M').to_timestamp(), line_dash='dash')
-
+    
     return fig
 
 

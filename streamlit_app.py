@@ -43,8 +43,8 @@ if doi:
                    on Scopus and updating it in the config file on your machine. \
                    This might be found under [Authenticaion] at the following \
                    location: {config_location}')
-    #except:
-        #st.error('There was an unexpected error.')
+    except:
+        st.error('There was an unexpected error.')
 
 
 # If valid DOI provided, execute rest of program
