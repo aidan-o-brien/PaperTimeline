@@ -1,15 +1,19 @@
+"""A script to gather data from the Scopus database."""
+
 import pandas as pd
 from pybliometrics.scopus import ScopusSearch
-from stqdm import stqdm
 import streamlit as st
 
 
 def get_initial_paper(doi):
+    '''Use the Scopus search API to find data on the user provided DOI
+    (Digital Object Identifier). Returns a dataframe of the data provided
+    by Scopus.'''
 
     # Search Scopus using ScopusSearch API
     query = f"DOI ({doi})"
-    s = ScopusSearch(query)
-    df = pd.DataFrame(s.results)
+    res = ScopusSearch(query)
+    df = pd.DataFrame(res.results)
 
     # If doi is not valid
     if df.shape[0] == 0:
@@ -25,6 +29,13 @@ def get_initial_paper(doi):
 
 
 def get_papers_by_authors(author_ids):
+    '''Uses the Scopus database to find papers that are written by the authors
+    of the origin (query) paper.
+
+    ---WARNING---
+
+    This Scopus functionality is in beta mode and it is expected that there
+    are errors in the mapping of papers to authors.'''
 
     # Search for papers by authors of query paper
     st.write('Fetching papers by authors...')
@@ -55,6 +66,14 @@ def get_papers_by_authors(author_ids):
 
 
 def get_citing_papers(eid):
+    '''Uses the Scopus database to find papers that cite the origin (query)
+    paper. Users the EID, a Scopus-specific unique identifier of papers.
+
+    ---WARNING---
+
+    The citing papers that are retrieved are limited to papers that are within
+    the Scopus database. This means that any citing papers that are not covered
+    by Scopus will not appear in the results.'''
 
     st.write('Fetching citing papers...')
     cited_query = f"REF ({eid})"
@@ -71,6 +90,17 @@ def get_citing_papers(eid):
 
 
 def create_df(doi):
+    '''Consolidates origin paper, papers by authors and citing papers. Origin
+    paper is provided by user input in the form of a DOI (Digital Object
+    Identifier).
+
+    --- WARNINGS---
+
+    - This Scopus functionality is in beta mode and it is expected that there
+    are errors in the mapping of papers to authors.
+    - The citing papers that are retrieved are limited to papers that are within
+    the Scopus database. This means that any citing papers that are not covered
+    by Scopus will not appear in the results.'''
 
     # Find data on initial paper
     df = get_initial_paper(doi)
@@ -87,7 +117,6 @@ def create_df(doi):
     df = pd.concat([df, df1, df2])
 
     # Drop duplicates
-    before = df.shape[0]
     df.drop_duplicates(subset='eid', keep='first', inplace=True)
 
     return df

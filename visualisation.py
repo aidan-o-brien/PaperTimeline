@@ -1,13 +1,16 @@
+"""File for preprocessing and visualisation of data."""
+
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
-import streamlit as st
-import numpy as np
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
 
 def preprocess(df):
+    '''Conduct the following preprocessing on data:
+    - Add placeholder variable for y axis separability
+    - Remove duplicates and blanks
+    - Align papers in the same month for aesthetics.'''
 
     # Add place holder for y axis, reset index and remove blanks for authors
     df['place_holder'] = 0
@@ -36,29 +39,15 @@ def preprocess(df):
     return df
 
 
-def create_viz(df, origin_date):
-    # Plot figure
-    fig = px.scatter(df, x='month_year', y='place_holder', color='paper_key',
-                     hover_data={'paper_key': False,
-                                 'place_holder': False,
-                                 'coverDate': False,
-                                 'title': True})
-
-    # Formatting
-    fig.update_layout(xaxis=dict(rangeslider=dict(visible=True), type='date'))
-    fig.update_layout(height=400, title_text='Research Timeline')
-    fig.update_yaxes(visible=False)
-    fig.update_layout(hovermode="closest")
-    ## Add vertical line at origin paper (month but not day)
-    fig.add_vline(x=origin_date.to_period('M').to_timestamp(), line_dash='dash')
-
-    return fig
-
-
 def create_cites_viz(df, origin_date):
+    '''Create a visualisation of the data provided - possibly filtered by
+    user input. Regardless of filtered data provided, visualisation has a
+    dashed line where the origin paper is.'''
 
+    # Cast citations as integer, instead of string for color scale
     df['Citations'] = df['citedby_count'].astype(int)
 
+    # Create figure
     fig = px.scatter(df, x='month_year', y='place_holder',
                      color='Citations',
                      color_continuous_scale='Plasma_r',
@@ -82,11 +71,15 @@ def create_cites_viz(df, origin_date):
 
 
 def create_wordcloud(df):
+    '''Create a wordcloud from the abstract of papers provided.'''
 
+    # Consolidate all abstracts into one string
     text = ''
     for abstract in df.description:
         if isinstance(abstract, str):
             text += abstract
+
+    # Create word cloud
     wordcloud = WordCloud(max_words=40,
                           background_color='white').generate(text)
     fig, ax = plt.subplots()
