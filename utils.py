@@ -81,8 +81,8 @@ def produce_sum_stats(data):
     + Papers by authors: {num_papers_by_authors}
     + Number of collaborations between authors: {find_num_collaborations(data)}
     + Numer of citing papers: {num_papers_citing}
-    + Average citations: {mean_cites}
-    + Maximum citations: {max_cites}
+    + Average citations: {mean_cites:.2f}
+    + Maximum citations: {int(max_cites)}
     + Number of total authors: {num_authors}
     """
 
