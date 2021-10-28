@@ -45,6 +45,7 @@ def create_cites_viz(df, origin_date):
     dashed line where the origin paper is.'''
 
     # Cast citations as integer, instead of string for color scale
+    df = df.copy()
     df['Citations'] = df['citedby_count'].astype(int)
 
     # Create figure
