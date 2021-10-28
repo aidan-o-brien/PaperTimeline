@@ -79,6 +79,8 @@ def get_citing_papers(eid):
     cited_query = f"REF ({eid})"
     cited_s = ScopusSearch(cited_query)
     df = pd.DataFrame(cited_s.results)
+    if df.shape[0] == 0:  # handle papers with no citations
+        return df
 
     # Split author data
     df.author_names = df.author_names.str.split(';')
@@ -113,10 +115,12 @@ def create_df(doi):
     # Find papers that cite initial paper
     df2 = get_citing_papers(df.iloc[0]['eid'])
 
-    # Combine dfs
-    df = pd.concat([df, df1, df2])
-
-    # Drop duplicates
-    df.drop_duplicates(subset='eid', keep='first', inplace=True)
+    # Combine dfs and drop duplicates (if there are citing papers)
+    if df2.shape[0] != 0:
+        df = pd.concat([df, df1, df2])
+        df.drop_duplicates(subset='eid', keep='first', inplace=True)
+    else:
+        df = pd.concat([df, df1])
+        df.drop_duplicates(subset='eid', keep='first', inplace=True)
 
     return df
