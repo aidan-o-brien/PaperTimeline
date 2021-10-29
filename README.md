@@ -24,7 +24,7 @@ git clone https://github.com/aidan-o-brien/PaperTimeline.git
 
 Or follow GitHub's [guidance](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) for how to clone a repository.
 
-The following requirements are listed in the `requirements.txt` file:
+You must have access to the [Scopus](https://www.scopus.com/search/form.uri?display=basic&zone=header&origin=#basic) database through your institution to run the code. Additionally, the following requirements are listed in the `requirements.txt` file:
 
 + `~umpy==1.14.3`
 + `matplotlib==2.2.2`
