@@ -12,11 +12,21 @@ from utils import (
     create_search_filter, create_author_filter, get_table_download_link, produce_sum_stats
 )
 from pybliometrics.scopus.exception import Scopus401Error
+from pybliometrics.scopus.utils import config
 
 
 # -- Basic page display
 st.set_page_config(page_title='Research Timeline', page_icon="emojione:blue-book")
 st.title('Research Timeline Visualisation')
+
+# -- Ensure user has an API key for Scopus
+if not config['Authentication']['APIKey']:
+    st.markdown("""
+    It looks like this is your first time using the app, welcome!
+    To use the app, you will need a Scopus API key. You can create by going
+    [here](https://dev.elsevier.com/apikey/manage).""")
+    API_KEY = st.text_input('Please enter your API key:', '')
+    config['Authentication']['APIKey'] = API_KEY
 
 
 # 1) Obtain DOI from user input
